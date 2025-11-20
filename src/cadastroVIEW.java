@@ -1,8 +1,12 @@
+
+import com.mysql.jdbc.Connection;
+import javax.swing.JOptionPane;
+import java.sql.SQLException;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author Adm
@@ -135,26 +139,57 @@ public class cadastroVIEW extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cadastroNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroNomeActionPerformed
-        
-        
+
+
     }//GEN-LAST:event_cadastroNomeActionPerformed
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        ProdutosDTO produto = new ProdutosDTO();
-        String nome = cadastroNome.getText();
-        String valor = cadastroValor.getText();
-        String status = "A Venda";
-        produto.setNome(nome);
-        produto.setValor(Integer.parseInt(valor));
-        produto.setStatus(status);
-        
-        ProdutosDAO produtodao = new ProdutosDAO();
-        produtodao.cadastrarProduto(produto);
-        
+        ProdutosDTO p = new ProdutosDTO();
+        conectaDAO conexao = new conectaDAO();
+        ProdutosDAO dao = new ProdutosDAO();
+        Connection estaConectado = (Connection) conexao.connectDB();
+
+        if (cadastroNome.getText().isBlank()) {
+            JOptionPane.showMessageDialog(null, "Digite o nome do produto.");
+            cadastroNome.requestFocus();
+        } else if (cadastroValor.getText().isBlank()) {
+            JOptionPane.showMessageDialog(null, "Digite o valor do produto");
+            cadastroValor.requestFocus();
+        } else {
+            String nome = cadastroNome.getText();
+            String valor = cadastroValor.getText();
+            String status = "A Venda";
+            p.setNome(nome);
+            p.setValor(Integer.parseInt(valor));
+            p.setStatus(status);
+
+            if (estaConectado == null) {
+                System.out.println("erro ao conectar no banco.");
+
+            } else {
+                //if pra validar se conectou
+                int salvarResultado = dao.cadastrarProduto(p, estaConectado); //tentar trocar de produtos para "p"
+
+                if (salvarResultado == 1) {
+                    JOptionPane.showMessageDialog(null, "O produto foi cadastrado com sucesso.");
+                    //limpar campos, request focus
+                } else if (salvarResultado == 1062) {
+                    JOptionPane.showMessageDialog(null, "Registro ja existe.");
+                }
+                //conexao.desconectar(); criar    
+            }
+        }
+        try {
+            if (estaConectado != null) {
+                estaConectado.close();
+            }
+        } catch (SQLException ex) {
+            System.out.println("Erro ao fechar conexão: " + ex.getMessage());
+        }
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void btnProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProdutosActionPerformed
-        listagemVIEW listagem = new listagemVIEW(); 
+        listagemVIEW listagem = new listagemVIEW();
         listagem.setVisible(true);
     }//GEN-LAST:event_btnProdutosActionPerformed
 
