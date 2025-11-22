@@ -9,10 +9,10 @@ public class listagemVIEW extends javax.swing.JFrame {
 
     public listagemVIEW() {
         initComponents();
-        listarProdutos();
+        carregarTabela();
     }
 
-    private void listarProdutos() {
+    private void carregarTabela() {
         conectaDAO conecta = new conectaDAO();
         ProdutosDAO produtosdao = new ProdutosDAO();
 
@@ -25,7 +25,7 @@ public class listagemVIEW extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Erro ao conectar com o banco de dados.");
                 return;
             }
-            ArrayList<ProdutosDTO> listagem = produtosdao.listarProdutos(conn);
+            ArrayList<ProdutosDTO> listagem = produtosdao.listarProdutosNaoVendidos(conn);
 
             DefaultTableModel model = (DefaultTableModel) tabelaProdutos.getModel();
             model.setNumRows(0);
@@ -193,7 +193,7 @@ public class listagemVIEW extends javax.swing.JFrame {
 
             if (linhasAfetadas > 0) {
                 JOptionPane.showMessageDialog(null, "Produto vendido com sucesso! (ID: " + id + ")");
-                listarProdutos();
+                carregarTabela(); ///
 
             } else {
                 JOptionPane.showMessageDialog(null, "Falha ao atualizar o status do produto.");
@@ -214,6 +214,8 @@ public class listagemVIEW extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
+        ListagemVendas lv = new ListagemVendas();
+        lv.setVisible(true);
     }//GEN-LAST:event_btnVendasActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
