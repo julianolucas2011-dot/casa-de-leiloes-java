@@ -35,10 +35,22 @@ public class ProdutosDAO {
             return e.getErrorCode();
         }
     }
+    
+    public int venderProduto(int id,Connection conn){
+        String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setInt(1, id); ///trocar possivelmente pra 0
+            return stmt.executeUpdate();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "errro: " + e.getMessage());
+            return 0;
+        }
+        
+    }
 
     public ArrayList<ProdutosDTO> listarProdutos(Connection conn) {
         ArrayList<ProdutosDTO> lista = new ArrayList<>();
-        String sql = "SELECT * FROM produtos";
+        String sql = "SELECT * FROM produtos WHERE status = 'A Venda'";
 
         try ( PreparedStatement stmt = conn.prepareStatement(sql)) {
 

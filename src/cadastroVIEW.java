@@ -167,16 +167,13 @@ public class cadastroVIEW extends javax.swing.JFrame {
                 System.out.println("erro ao conectar no banco.");
 
             } else {
-                //if pra validar se conectou
-                int salvarResultado = dao.cadastrarProduto(p, estaConectado); //tentar trocar de produtos para "p"
+                int salvarResultado = dao.cadastrarProduto(p, estaConectado); 
 
                 if (salvarResultado == 1) {
                     JOptionPane.showMessageDialog(null, "O produto foi cadastrado com sucesso.");
-                    //limpar campos, request focus
                 } else if (salvarResultado == 1062) {
                     JOptionPane.showMessageDialog(null, "Registro ja existe.");
                 }
-                //conexao.desconectar(); criar    
             }
         }
         try {
